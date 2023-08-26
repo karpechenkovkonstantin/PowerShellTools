@@ -194,8 +194,8 @@ $button.Add_Click({
                             msiexec.exe /x $key.PSChildName /qn
                         } else {
                             # Код для обработки случая, когда строка не начинается с "msiexec.exe"
-                            $processOutput = Start-Process -FilePath $uninstallString -ArgumentList "/?"
-                            Write-Host $processOutput.StandardOutput
+                            $uninstallString = "`"$uninstallString`""
+                            Start-Process -FilePath $uninstallString.ToLower() -ArgumentList "/S /SILENT /VERYSILENT /SUPPRESSMSGBOXES /NORESTART /SP-" -Wait
                         }
 
                     }
