@@ -112,7 +112,10 @@ function Get-RemoteApps {
 
     # Выполнить команду на удаленном компьютере для получения свойств приложений из реестра Windows
     $apps = Invoke-Command -Session $session -ScriptBlock {
+    # Получаем основные приложения
         $apps64 = Get-ItemProperty HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\* | Where-Object { $_.DisplayName}
+    # Получаем x32 приложения
+    # !!! Добавить обработчик для x32 систем !!!
         $apps32 = Get-ItemProperty HKLM:\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\* | Where-Object { $_.DisplayName }
 
         $apps64+$apps32
@@ -191,7 +194,7 @@ $button.Add_Click({
                     if ($uninstallString) {
                         if ($uninstallString -like "msiexec.exe*") {
                             # Код для обработки случая, когда строка начинается с "msiexec.exe"
-                            msiexec.exe /x $key.PSChildName /qn
+                            msiexec.exe /x $AppName /qn
                         } else {
                             # Код для обработки случая, когда строка не начинается с "msiexec.exe"
                             $uninstallString = "`"$uninstallString`""
