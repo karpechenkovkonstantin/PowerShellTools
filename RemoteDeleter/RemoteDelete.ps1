@@ -186,12 +186,9 @@ $button.Add_Click({
                         [string]$AppName, # Имя приложения для удаления
                         [string]$uninstallString #Путь к деинсталятору приложения
                     )
-
-                    # Найти ключ реестра для приложения по имени
-                    $key = Get-ItemProperty HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\* | Where-Object { $_.DisplayName -like $AppName }
-                            Write-Host "UN: $uninstallString"
-                    # Если ключ найден, то выполнить команду msiexec.exe для удаления приложения
-                    if ($key) {
+                                       
+                    # Если ключ для удаления найден, то выполнить команду для удаления приложения
+                    if ($uninstallString) {
                         if ($uninstallString -like "msiexec.exe*") {
                             # Код для обработки случая, когда строка начинается с "msiexec.exe"
                             msiexec.exe /x $key.PSChildName /qn
