@@ -121,6 +121,8 @@ function Get-RemoteApps {
         $apps64+$apps32
     }
 
+    #Сортируем в алфавитном порядке
+    $apps = $apps | Sort-Object -Property DisplayName
     # Завершить сессию удаленного управления
     Remove-PSSession -Session $session
 
@@ -204,6 +206,9 @@ $button.Add_Click({
                     }
                 } -ArgumentList $appName, $uninstallString
 
+                # Завершить сессию удаленного управления
+                Remove-PSSession -Session $session
+
                 try {
                     $apps = Get-RemoteApps -ComputerName $computerName
 
@@ -219,16 +224,11 @@ $button.Add_Click({
                     Write-Error $_.Exception.Message
                 }
 
-                # Завершить сессию удаленного управления
-                Remove-PSSession -Session $session
+
 
                 # Вывести сообщение об успешном удалении приложения в консоль PowerShell
                 Write-Host "Приложение $appName ($appVersion) успешно удалено с компьютера $computerName"
-
-                # Обновить список приложений в таблице
-                $apps = Get-RemoteApps -ComputerName $computerName
-                $dataGrid.ItemsSource = $null
-                $dataGrid.ItemsSource = $apps
+                                
             }
             catch {
                 # Вывести сообщение об ошибке в консоль PowerShell
