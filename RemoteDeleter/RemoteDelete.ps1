@@ -112,7 +112,10 @@ function Get-RemoteApps {
 
     # Выполнить команду на удаленном компьютере для получения свойств приложений из реестра Windows
     $apps = Invoke-Command -Session $session -ScriptBlock {
-        Get-ItemProperty HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\* | Where-Object { $_.DisplayName -and $_.DisplayVersion }
+        $apps64 = Get-ItemProperty HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\* | Where-Object { $_.DisplayName}
+        $apps32 = Get-ItemProperty HKLM:\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\* | Where-Object { $_.DisplayName }
+
+        $apps64+$apps32
     }
 
     # Завершить сессию удаленного управления
